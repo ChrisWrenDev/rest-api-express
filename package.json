@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
+    "@types/config": "^3.3.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.2",
@@ -16,6 +17,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "config": "^3.3.12",
     "cors": "^2.8.5",
     "express": "^4.21.2"
   }
