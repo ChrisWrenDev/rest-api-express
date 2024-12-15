@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
-import bycrpt from "bcrypt";
+import bcrypt from "bcrypt";
+import config from "config";
 
-export interface UserDocument {
+export interface UserInput {
   email: string;
   name: string;
   password: string;
+}
+
+export interface UserDocument extends UserInput, mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +23,22 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre("save", async function (next: (err?: Error) => void) {
+  let user = this as UserDocument;
+
+  if (!user.isModified("password")) {
+    return next();
+  }
+
+  const salt = await bcrypt.genSalt(config.get<number>("saltWorkFactor"));
+
+  const hash = await bcrypt.hashSync(user.password, salt);
+
+  user.password = hash;
+
+  return next();
+});
 
 const UserModel = mongoose.model("User", userSchema);
 
